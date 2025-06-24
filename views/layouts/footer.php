@@ -68,7 +68,7 @@
             <div class="col-md-6 text-md-end">
                 <p class="text-muted small mb-0">
                     Version <?= APP_VERSION ?>
-                    <?php if (defined('APP_DEBUG') && APP_DEBUG): ?>
+                    <?php if (defined('APP_DEBUG')): ?>
                         <span class="badge bg-warning text-dark ms-2">
                             <i class="fas fa-bug me-1"></i>DEBUG
                         </span>

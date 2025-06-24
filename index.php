@@ -1,15 +1,25 @@
 <?php
-// index.php - Point d'entrée et routeur de l'application
 require_once 'config/config.php';
 
 // Récupérer l'URL demandée
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
+// DEBUG: Afficher l'URL demandée
+// echo "<h3>Debug du routage</h3>";
+// echo "<p><strong>REQUEST_URI:</strong> " . $request . "</p>";
+// echo "<p><strong>PATH:</strong> " . $path . "</p>";
+
+
 // Enlever le chemin de base si l'application est dans un sous-dossier
 $basePath = '/test-gestion-dossiers/';
 if (strpos($path, $basePath) === 0) {
     $path = substr($path, strlen($basePath));
+}
+
+// Si path est vide après suppression du basePath, on est à la racine
+if (empty($path) || $path === '/') {
+    $path = '';
 }
 
 // Séparer le chemin en segments
@@ -19,6 +29,13 @@ $segments = explode('/', trim($path, '/'));
 $controller = $segments[0] ?? '';
 $action = $segments[1] ?? '';
 $param = $segments[2] ?? '';
+
+// DEBUG: Ajoutez ces lignes temporairement pour voir ce qui se passe
+// echo "REQUEST_URI: " . $_SERVER['REQUEST_URI'] . "<br>";
+// echo "Path: " . $path . "<br>";
+// echo "Controller: " . $controller . "<br>";
+// echo "Action: " . $action . "<br>";
+// die();
 
 try {
     // Routes pour les dossiers
@@ -171,9 +188,34 @@ try {
     
     // Route pour la recherche globale
     elseif ($controller === 'search') {
-        require_once 'controllers/DossierController.php';
-        $dossierController = new DossierController();
-        $dossierController->search();
+        require_once 'controllers/SearchController.php';
+        $searchController = new SearchController();
+        
+        switch ($action) {
+            case 'global':
+                $searchController->global();
+                break;
+                
+            case 'advanced':
+                $searchController->advanced();
+                break;
+                
+            case 'suggestions':
+                $searchController->suggestions();
+                break;
+                
+            case 'recent':
+                $searchController->recent();
+                break;
+                
+            case 'stats':
+                $searchController->stats();
+                break;
+                
+            default:
+                $searchController->global();
+                break;
+        }
     }
     
     // Route pour les statistiques/dashboard
@@ -214,7 +256,7 @@ try {
         $errorCode = 404;
         
         // En développement, afficher plus de détails
-        if (defined('APP_DEBUG')) {
+        if (defined('APP_DEBUG') && APP_DEBUG) {
             $errorDetails = [
                 'Controller' => $controller,
                 'Action' => $action,
