@@ -4,7 +4,7 @@ require_once 'config/config.php';
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
-$basePath = '/test-gestion-dossiers/';
+$basePath = '/testMaltGestionDossier/';
 if (strpos($path, $basePath) === 0) {
     $path = substr($path, strlen($basePath));
 }
