@@ -1,9 +1,7 @@
 <?php
-// views/dossiers/create.php - Formulaire de création de dossier
 $view = 'dossiers/create';
 ?>
 
-<!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -18,7 +16,6 @@ $view = 'dossiers/create';
     </ol>
 </nav>
 
-<!-- En-tête -->
 <div class="row align-items-center mb-4">
     <div class="col">
         <div class="d-flex align-items-center">
@@ -43,7 +40,6 @@ $view = 'dossiers/create';
 
 <div class="row">
     <div class="col-lg-8">
-        <!-- Formulaire principal -->
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white">
                 <h5 class="mb-0">
@@ -55,7 +51,6 @@ $view = 'dossiers/create';
                 <form id="createDossierForm" method="POST" action="<?= BASE_URL ?>dossier/store">
                     <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                     
-                    <!-- Référence (auto-générée) -->
                     <div class="mb-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-hashtag me-1"></i>
@@ -76,7 +71,6 @@ $view = 'dossiers/create';
                         </div>
                     </div>
                     
-                    <!-- Date de création -->
                     <div class="mb-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-calendar me-1"></i>
@@ -97,7 +91,6 @@ $view = 'dossiers/create';
                         </div>
                     </div>
                     
-                    <!-- Tiers à associer (optionnel) -->
                     <div class="mb-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-building me-1"></i>
@@ -148,7 +141,6 @@ $view = 'dossiers/create';
                         <?php endif; ?>
                     </div>
                     
-                    <!-- Actions -->
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="<?= BASE_URL ?>dossier" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>
@@ -165,7 +157,6 @@ $view = 'dossiers/create';
     </div>
     
     <div class="col-lg-4">
-        <!-- Aide et informations -->
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-primary text-white">
                 <h6 class="mb-0">
@@ -210,7 +201,6 @@ $view = 'dossiers/create';
             </div>
         </div>
         
-        <!-- Statistiques -->
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-light">
                 <h6 class="mb-0">
@@ -249,7 +239,6 @@ $view = 'dossiers/create';
             </div>
         </div>
         
-        <!-- Derniers dossiers créés -->
         <div class="card border-0 shadow-sm mt-4">
             <div class="card-header bg-light">
                 <h6 class="mb-0">
@@ -307,17 +296,14 @@ $view = 'dossiers/create';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Charger les derniers dossiers
     loadRecentDossiers();
     
-    // Gestion du formulaire
     const form = document.getElementById('createDossierForm');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         createDossier();
     });
     
-    // Sélection/désélection de tous les tiers
     addSelectAllTiersButton();
 });
 
@@ -326,7 +312,6 @@ function createDossier() {
     const formData = new FormData(form);
     const submitBtn = form.querySelector('button[type="submit"]');
     
-    // Désactiver le bouton et afficher le loading
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i>Création en cours...';
     
@@ -336,7 +321,6 @@ function createDossier() {
     })
     .then(response => {
         if (response.redirected) {
-            // Redirection vers le dossier créé
             window.location.href = response.url;
             return;
         }
@@ -351,7 +335,6 @@ function createDossier() {
         console.error('Erreur:', error);
         alert('Erreur lors de la création du dossier : ' + error.message);
         
-        // Réactiver le bouton
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Créer le dossier';
     });
@@ -432,7 +415,6 @@ function formatDateShort(dateString) {
     return date.toLocaleDateString('fr-FR');
 }
 
-// Gestion des modales de création rapide (réutilisation du code de navbar.php)
 function showCreateTiersModal() {
     const modal = new bootstrap.Modal(document.getElementById('createTiersModal'));
     modal.show();
@@ -443,7 +425,6 @@ function showCreateContactModal() {
     modal.show();
 }
 
-// Styles dynamiques
 const style = document.createElement('style');
 style.textContent = `
     .hover-item:hover {
