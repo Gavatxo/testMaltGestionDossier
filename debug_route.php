@@ -1,10 +1,8 @@
 <?php
-// debug_routing.php - Pour diagnostiquer le problème de routage
 require_once 'config/config.php';
 
 echo "<h2>🔍 Debug du routage</h2>";
 
-// Tester l'URL actuelle
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
@@ -29,7 +27,6 @@ echo "<strong>Controller:</strong> '" . htmlspecialchars($controller) . "'<br>";
 echo "<strong>Action:</strong> '" . htmlspecialchars($action) . "'<br>";
 echo "<strong>Param:</strong> '" . htmlspecialchars($param) . "'<br><br>";
 
-// Vérifier l'existence des fichiers
 echo "<h3>📁 Vérification des fichiers :</h3>";
 
 $files_to_check = [
