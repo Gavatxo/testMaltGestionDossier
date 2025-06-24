@@ -1,6 +1,6 @@
 <?php
 // views/dossiers/create.php - Formulaire de création de dossier
-$view = 'dossiers/create.php';
+$view = 'dossiers/create';
 ?>
 
 <!-- Breadcrumb -->

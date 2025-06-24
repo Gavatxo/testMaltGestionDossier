@@ -1,12 +1,12 @@
 <?php
-// test_connection.php
+// test_connection_simple.php - Version simplifiée du test de connexion
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Connexion Base de Données</title>
+    <title>Test Connexion Simple</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
         .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -16,113 +16,79 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
-        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🧪 Test de Connexion - Gestion de Dossiers</h1>
+        <h1>🧪 Test de Connexion Simple</h1>
         
         <?php
-        // Test de la configuration
-        echo "<div class='info'><strong>Configuration actuelle :</strong><br>";
+        // Configuration
+        echo "<div class='info'><strong>Configuration :</strong><br>";
         echo "PHP Version : " . phpversion() . "<br>";
-        echo "Extension PDO : " . (extension_loaded('pdo') ? '✅ Installée' : '❌ Manquante') . "<br>";
-        echo "Extension PDO MySQL : " . (extension_loaded('pdo_mysql') ? '✅ Installée' : '❌ Manquante') . "</div>";
+        echo "Extension PDO : " . (extension_loaded('pdo') ? '✅ OK' : '❌ Manquante') . "<br>";
+        echo "Extension PDO MySQL : " . (extension_loaded('pdo_mysql') ? '✅ OK' : '❌ Manquante') . "</div>";
         
-        // Test 1 : Inclusion des fichiers
         try {
+            // Chargement de la classe Database
             require_once 'config/database.php';
-            echo "<div class='success'>✅ Fichier database.php chargé avec succès</div>";
-        } catch (Exception $e) {
-            echo "<div class='error'>❌ Erreur lors du chargement : " . $e->getMessage() . "</div>";
-            exit;
-        }
-        
-        // Test 2 : Création de l'instance Database
-        try {
+            echo "<div class='success'>✅ Classe Database chargée</div>";
+            
+            // Test de connexion
             $database = new Database();
-            echo "<div class='success'>✅ Instance Database créée</div>";
-        } catch (Exception $e) {
-            echo "<div class='error'>❌ Erreur création instance : " . $e->getMessage() . "</div>";
-            exit;
-        }
-        
-        // Test 3 : Connexion à la base de données
-        try {
             $conn = $database->getConnection();
-            echo "<div class='success'>✅ Connexion à la base de données réussie !</div>";
+            echo "<div class='success'>✅ Connexion réussie !</div>";
             
-            // Test 4 : Information sur la base
-            $stmt = $conn->query("SELECT DATABASE() as current_db, USER() as current_user, VERSION() as mysql_version");
-            $info = $stmt->fetch();
+            // Informations de base simples
+            try {
+                $result = $conn->query("SELECT DATABASE() as db_name")->fetch();
+                echo "<div class='info'>Base de données : " . ($result['db_name'] ?: 'Aucune') . "</div>";
+            } catch (Exception $e) {
+                echo "<div class='error'>Erreur info DB : " . $e->getMessage() . "</div>";
+            }
             
-            echo "<div class='info'>";
-            echo "<strong>Informations de connexion :</strong><br>";
-            echo "Base de données : " . ($info['current_db'] ?: 'Aucune') . "<br>";
-            echo "Utilisateur : " . $info['current_user'] . "<br>";
-            echo "Version MySQL : " . $info['mysql_version'] . "<br>";
-            echo "</div>";
-            
-        } catch (Exception $e) {
-            echo "<div class='error'>❌ Erreur de connexion : " . $e->getMessage() . "</div>";
-            echo "<div class='info'><strong>Solutions possibles :</strong><br>";
-            echo "1. Vérifier que MAMP est démarré<br>";
-            echo "2. Vérifier le port MySQL (8889 par défaut)<br>";
-            echo "3. Vérifier les identifiants (root/root par défaut)<br>";
-            echo "4. Créer la base de données 'gestion_dossiers'</div>";
-            exit;
-        }
-        
-        // Test 5 : Vérification des tables
-        try {
-            $stmt = $conn->query("SHOW TABLES");
-            $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
-            
-            if (empty($tables)) {
-                echo "<div class='error'>⚠️ Aucune table trouvée. Vous devez importer les scripts SQL.</div>";
-            } else {
-                echo "<div class='success'>✅ Tables trouvées : " . implode(', ', $tables) . "</div>";
+            // Test des tables
+            try {
+                $stmt = $conn->query("SHOW TABLES");
+                $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
                 
-                // Test 6 : Comptage des données
-                if (in_array('entites', $tables) && in_array('relations', $tables)) {
-                    $stmt = $conn->query("SELECT 
-                        (SELECT COUNT(*) FROM entites WHERE type='dossier') as nb_dossiers,
-                        (SELECT COUNT(*) FROM entites WHERE type='tiers') as nb_tiers,
-                        (SELECT COUNT(*) FROM entites WHERE type='contact') as nb_contacts,
-                        (SELECT COUNT(*) FROM relations) as nb_relations
-                    ");
-                    $stats = $stmt->fetch();
+                if (empty($tables)) {
+                    echo "<div class='error'>⚠️ Aucune table trouvée</div>";
+                } else {
+                    echo "<div class='success'>✅ Tables trouvées : " . implode(', ', $tables) . "</div>";
                     
-                    echo "<table>";
-                    echo "<tr><th>Type</th><th>Nombre</th></tr>";
-                    echo "<tr><td>Dossiers</td><td>" . $stats['nb_dossiers'] . "</td></tr>";
-                    echo "<tr><td>Tiers</td><td>" . $stats['nb_tiers'] . "</td></tr>";
-                    echo "<tr><td>Contacts</td><td>" . $stats['nb_contacts'] . "</td></tr>";
-                    echo "<tr><td>Relations</td><td>" . $stats['nb_relations'] . "</td></tr>";
-                    echo "</table>";
+                    // Compter les données
+                    if (in_array('entites', $tables)) {
+                        $stmt = $conn->query("SELECT type, COUNT(*) as nb FROM entites GROUP BY type");
+                        $counts = $stmt->fetchAll();
+                        
+                        echo "<table>";
+                        echo "<tr><th>Type</th><th>Nombre</th></tr>";
+                        foreach ($counts as $count) {
+                            echo "<tr><td>" . $count['type'] . "</td><td>" . $count['nb'] . "</td></tr>";
+                        }
+                        echo "</table>";
+                    }
                 }
+            } catch (Exception $e) {
+                echo "<div class='error'>Erreur tables : " . $e->getMessage() . "</div>";
             }
             
         } catch (Exception $e) {
-            echo "<div class='error'>❌ Erreur lors de la vérification des tables : " . $e->getMessage() . "</div>";
-        }
-        
-        // Test 7 : Vérification des vues (si elles existent)
-        try {
-            $stmt = $conn->query("SHOW FULL TABLES WHERE Table_type = 'VIEW'");
-            $views = $stmt->fetchAll(PDO::FETCH_COLUMN);
-            
-            if (!empty($views)) {
-                echo "<div class='success'>✅ Vues SQL trouvées : " . implode(', ', $views) . "</div>";
-            } else {
-                echo "<div class='info'>ℹ️ Aucune vue SQL trouvée (optionnel)</div>";
-            }
-            
-        } catch (Exception $e) {
-            // Ignore si les vues ne sont pas encore créées
+            echo "<div class='error'>❌ Erreur : " . $e->getMessage() . "</div>";
+            echo "<div class='info'><strong>Vérifiez :</strong><br>";
+            echo "1. MAMP est démarré<br>";
+            echo "2. Port MySQL = 8889<br>";
+            echo "3. Base 'gestion_dossiers' existe</div>";
         }
         ?>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 4px;">
+            <strong>🔗 Liens utiles :</strong><br>
+            <a href="index.php" style="color: #007bff;">🚀 Application principale</a><br>
+            <a href="test_models.php" style="color: #007bff;">🧪 Test des modèles</a><br>
+            <a href="http://localhost:8888/phpMyAdmin" style="color: #007bff;">🗄️ phpMyAdmin</a>
+        </div>
     </div>
 </body>
 </html>

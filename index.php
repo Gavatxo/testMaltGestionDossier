@@ -6,12 +6,6 @@ require_once 'config/config.php';
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
-// DEBUG: Afficher l'URL demandée
-echo "<h3>Debug du routage</h3>";
-echo "<p><strong>REQUEST_URI:</strong> " . $request . "</p>";
-echo "<p><strong>PATH:</strong> " . $path . "</p>";
-
-
 // Enlever le chemin de base si l'application est dans un sous-dossier
 $basePath = '/test-gestion-dossiers/';
 if (strpos($path, $basePath) === 0) {
@@ -30,13 +24,6 @@ $segments = explode('/', trim($path, '/'));
 $controller = $segments[0] ?? '';
 $action = $segments[1] ?? '';
 $param = $segments[2] ?? '';
-
-// DEBUG: Ajoutez ces lignes temporairement pour voir ce qui se passe
-// echo "REQUEST_URI: " . $_SERVER['REQUEST_URI'] . "<br>";
-// echo "Path: " . $path . "<br>";
-// echo "Controller: " . $controller . "<br>";
-// echo "Action: " . $action . "<br>";
-// die();
 
 try {
     // Routes pour les dossiers
@@ -269,62 +256,5 @@ try {
         
         include 'views/layouts/error.php';
     }
-}
-
-// Fonctions utilitaires pour le routage
-
-/**
- * Vérifier si un contrôleur existe
- */
-function controllerExists($controller) {
-    $controllerFile = "controllers/" . ucfirst($controller) . "Controller.php";
-    return file_exists($controllerFile);
-}
-
-/**
- * Nettoyer et valider les paramètres d'URL
- */
-function sanitizeUrlParam($param) {
-    return preg_replace('/[^a-zA-Z0-9\-_]/', '', $param);
-}
-
-/**
- * Redirection avec code de statut
- */
-function redirectWithStatus($url, $status = 302) {
-    http_response_code($status);
-    redirect($url);
-}
-
-/**
- * Générer une URL pour une route
- */
-function route($controller, $action = '', $param = '') {
-    $url = BASE_URL;
-    
-    if (!empty($controller)) {
-        $url .= $controller;
-        
-        if (!empty($action)) {
-            $url .= '/' . $action;
-            
-            if (!empty($param)) {
-                $url .= '/' . $param;
-            }
-        }
-    }
-    
-    return $url;
-}
-
-/**
- * Créer un lien HTML avec la route
- */
-function linkTo($controller, $action = '', $param = '', $text = '', $class = '') {
-    $url = route($controller, $action, $param);
-    $text = $text ?: ucfirst($controller);
-    $class = $class ? " class=\"{$class}\"" : '';
-    
-    return "<a href=\"{$url}\"{$class}>{$text}</a>";
 }
 ?>
