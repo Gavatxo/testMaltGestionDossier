@@ -123,17 +123,6 @@
             // Ignore si les vues ne sont pas encore créées
         }
         ?>
-        
-        <div style="margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 4px;">
-            <strong>🎯 Prochaines étapes :</strong><br>
-            1. Si la connexion fonctionne → continuer avec les modèles PHP<br>
-            2. Si pas de tables → importer les scripts SQL<br>
-            3. Si erreur de connexion → vérifier la configuration MAMP<br>
-            <br>
-            <strong>📁 Accès rapides :</strong><br>
-            • <a href="http://localhost:8888/phpMyAdmin/" target="_blank">phpMyAdmin</a><br>
-            • <a href="index.php">Application principale</a>
-        </div>
     </div>
 </body>
 </html>
