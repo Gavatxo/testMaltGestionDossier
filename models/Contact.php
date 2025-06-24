@@ -1,12 +1,9 @@
 <?php
-// models/Contact.php
 require_once 'Database.php';
 
 class Contact extends BaseModel {
     
-    /**
-     * Récupérer tous les contacts
-     */
+
     public function getAll() {
         $sql = "SELECT 
                     c.id,
@@ -25,9 +22,7 @@ class Contact extends BaseModel {
         return $this->fetchAll($sql);
     }
     
-    /**
-     * Récupérer un contact par son ID avec ses détails
-     */
+
     public function getById($id) {
         $sql = "SELECT * FROM entites WHERE id = :id AND type = 'contact' AND actif = TRUE";
         $contact = $this->fetch($sql, ['id' => $id]);
@@ -36,23 +31,18 @@ class Contact extends BaseModel {
             return null;
         }
         
-        // Ajouter les tiers associés
         $contact['tiers'] = $this->getTiersByContactId($id);
         
         return $contact;
     }
     
-    /**
-     * Récupérer un contact par son email
-     */
+
     public function getByEmail($email) {
         $sql = "SELECT * FROM entites WHERE email = :email AND type = 'contact' AND actif = TRUE";
         return $this->fetch($sql, ['email' => $email]);
     }
     
-    /**
-     * Créer un nouveau contact
-     */
+
     public function create($nom, $prenom, $email, $tiersIds = []) {
         try {
             $this->beginTransaction();
