@@ -25,7 +25,7 @@ Navigateur web moderne
 Étapes d'installation
 
 Cloner le projet
-bashgit clone [URL_DU_REPO]
+bash git clone https://github.com/Gavatxo/testMaltGestionDossier.git
 cd testMaltGestionDossier
 
 Configuration MAMP
