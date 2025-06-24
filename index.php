@@ -1,4 +1,5 @@
 <?php
+// index.php - Point d'entrée et routeur de l'application
 require_once 'config/config.php';
 
 // Récupérer l'URL demandée
@@ -6,9 +7,9 @@ $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
 // DEBUG: Afficher l'URL demandée
-// echo "<h3>Debug du routage</h3>";
-// echo "<p><strong>REQUEST_URI:</strong> " . $request . "</p>";
-// echo "<p><strong>PATH:</strong> " . $path . "</p>";
+echo "<h3>Debug du routage</h3>";
+echo "<p><strong>REQUEST_URI:</strong> " . $request . "</p>";
+echo "<p><strong>PATH:</strong> " . $path . "</p>";
 
 
 // Enlever le chemin de base si l'application est dans un sous-dossier

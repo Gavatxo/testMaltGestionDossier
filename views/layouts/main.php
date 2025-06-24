@@ -1,324 +1,148 @@
 <?php
-// index.php - Point d'entrée et routeur de l'application
-require_once 'config/config.php';
-
-// Récupérer l'URL demandée
-$request = $_SERVER['REQUEST_URI'];
-$path = parse_url($request, PHP_URL_PATH);
-
-// Enlever le chemin de base si l'application est dans un sous-dossier
-$basePath = '/test-gestion-dossiers/';
-if (strpos($path, $basePath) === 0) {
-    $path = substr($path, strlen($basePath));
-}
-
-// Si path est vide après suppression du basePath, on est à la racine
-if (empty($path) || $path === '/') {
-    $path = '';
-}
-
-// Séparer le chemin en segments
-$segments = explode('/', trim($path, '/'));
-
-// Premier segment = contrôleur, deuxième = action, troisième = paramètre
-$controller = $segments[0] ?? '';
-$action = $segments[1] ?? '';
-$param = $segments[2] ?? '';
-
-// DEBUG: Ajoutez ces lignes temporairement pour voir ce qui se passe
-// echo "REQUEST_URI: " . $_SERVER['REQUEST_URI'] . "<br>";
-// echo "Path: " . $path . "<br>";
-// echo "Controller: " . $controller . "<br>";
-// echo "Action: " . $action . "<br>";
-// die();
-
-try {
-    // Routes pour les dossiers
-    if (empty($controller) || $controller === 'dossier') {
-        require_once 'controllers/DossierController.php';
-        $dossierController = new DossierController();
-        
-        switch ($action) {
-            case '':
-            case 'index':
-                $dossierController->index();
-                break;
-                
-            case 'create':
-                $dossierController->create();
-                break;
-                
-            case 'store':
-                $dossierController->store();
-                break;
-                
-            case 'add-tiers':
-                $dossierController->addTiers();
-                break;
-                
-            case 'remove-tiers':
-                $dossierController->removeTiers();
-                break;
-                
-            case 'delete':
-                $dossierController->delete($param);
-                break;
-                
-            case 'search':
-                $dossierController->search();
-                break;
-                
-            case 'api':
-                $dossierController->api();
-                break;
-                
-            default:
-                // Si l'action est un nombre, c'est probablement un ID pour show
-                if (is_numeric($action)) {
-                    $dossierController->show($action);
-                } else {
-                    throw new Exception("Action non trouvée : {$action}");
-                }
-                break;
-        }
-    }
-    
-    // Routes pour les tiers
-    elseif ($controller === 'tiers') {
-        require_once 'controllers/TierController.php';
-        $tierController = new TierController();
-        
-        switch ($action) {
-            case 'create':
-                $tierController->create();
-                break;
-                
-            case 'update':
-                $tierController->update();
-                break;
-                
-            case 'delete':
-                $tierController->delete();
-                break;
-                
-            case 'add-contact':
-                $tierController->addContact();
-                break;
-                
-            case 'remove-contact':
-                $tierController->removeContact();
-                break;
-                
-            case 'search':
-                $tierController->search();
-                break;
-                
-            case 'api':
-                $tierController->api();
-                break;
-                
-            case 'available':
-                $tierController->available($param);
-                break;
-                
-            default:
-                // Si l'action est un nombre, c'est un ID pour show
-                if (is_numeric($action)) {
-                    $tierController->show($action);
-                } else {
-                    throw new Exception("Action non trouvée : {$action}");
-                }
-                break;
-        }
-    }
-    
-    // Routes pour les contacts
-    elseif ($controller === 'contact') {
-        require_once 'controllers/ContactController.php';
-        $contactController = new ContactController();
-        
-        switch ($action) {
-            case 'create':
-                $contactController->create();
-                break;
-                
-            case 'update':
-                $contactController->update();
-                break;
-                
-            case 'delete':
-                $contactController->delete();
-                break;
-                
-            case 'search':
-                $contactController->search();
-                break;
-                
-            case 'api':
-                $contactController->api();
-                break;
-                
-            case 'available':
-                $contactController->available($param);
-                break;
-                
-            case 'validate-email':
-                $contactController->validateEmail();
-                break;
-                
-            case 'by-letter':
-                $contactController->byLetter($param);
-                break;
-                
-            default:
-                // Si l'action est un nombre, c'est un ID pour show
-                if (is_numeric($action)) {
-                    $contactController->show($action);
-                } else {
-                    throw new Exception("Action non trouvée : {$action}");
-                }
-                break;
-        }
-    }
-    
-    // Route pour la recherche globale
-    elseif ($controller === 'search') {
-        require_once 'controllers/SearchController.php';
-        $searchController = new SearchController();
-        
-        switch ($action) {
-            case 'global':
-                $searchController->global();
-                break;
-                
-            case 'advanced':
-                $searchController->advanced();
-                break;
-                
-            case 'suggestions':
-                $searchController->suggestions();
-                break;
-                
-            case 'recent':
-                $searchController->recent();
-                break;
-                
-            case 'stats':
-                $searchController->stats();
-                break;
-                
-            default:
-                $searchController->global();
-                break;
-        }
-    }
-    
-    // Route pour les statistiques/dashboard
-    elseif ($controller === 'dashboard') {
-        require_once 'controllers/DossierController.php';
-        $dossierController = new DossierController();
-        $dossierController->index(); // Afficher le dashboard principal
-    }
-    
-    // Route pour les tests (en développement)
-    elseif ($controller === 'test' && $action === 'models') {
-        include 'test_models.php';
-        exit;
-    }
-    
-    elseif ($controller === 'test' && $action === 'connection') {
-        include 'test_connection.php';
-        exit;
-    }
-    
-    // Route inconnue
-    else {
-        throw new Exception("Contrôleur non trouvé : {$controller}");
-    }
-    
-} catch (Exception $e) {
-    // Gestion des erreurs
-    if (isAjax()) {
-        // Réponse JSON pour les requêtes AJAX
-        jsonResponse([
-            'success' => false,
-            'message' => $e->getMessage(),
-            'error_type' => 'routing_error'
-        ], 404);
-    } else {
-        // Affichage d'une page d'erreur pour les requêtes normales
-        $errorMessage = $e->getMessage();
-        $errorCode = 404;
-        
-        // En développement, afficher plus de détails
-        if (defined('APP_DEBUG') && APP_DEBUG) {
-            $errorDetails = [
-                'Controller' => $controller,
-                'Action' => $action,
-                'Param' => $param,
-                'Path' => $path,
-                'Segments' => $segments
-            ];
-        }
-        
-        include 'views/layouts/error.php';
-    }
-}
-
-// Fonctions utilitaires pour le routage
-
-/**
- * Vérifier si un contrôleur existe
- */
-function controllerExists($controller) {
-    $controllerFile = "controllers/" . ucfirst($controller) . "Controller.php";
-    return file_exists($controllerFile);
-}
-
-/**
- * Nettoyer et valider les paramètres d'URL
- */
-function sanitizeUrlParam($param) {
-    return preg_replace('/[^a-zA-Z0-9\-_]/', '', $param);
-}
-
-/**
- * Redirection avec code de statut
- */
-function redirectWithStatus($url, $status = 302) {
-    http_response_code($status);
-    redirect($url);
-}
-
-/**
- * Générer une URL pour une route
- */
-function route($controller, $action = '', $param = '') {
-    $url = BASE_URL;
-    
-    if (!empty($controller)) {
-        $url .= $controller;
-        
-        if (!empty($action)) {
-            $url .= '/' . $action;
-            
-            if (!empty($param)) {
-                $url .= '/' . $param;
-            }
-        }
-    }
-    
-    return $url;
-}
-
-/**
- * Créer un lien HTML avec la route
- */
-function linkTo($controller, $action = '', $param = '', $text = '', $class = '') {
-    $url = route($controller, $action, $param);
-    $text = $text ?: ucfirst($controller);
-    $class = $class ? " class=\"{$class}\"" : '';
-    
-    return "<a href=\"{$url}\"{$class}>{$text}</a>";
-}
+$pageTitle = $title ?? 'Gestion de Dossiers';
 ?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= e($pageTitle) ?> - <?= APP_NAME ?></title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome pour les icônes -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- CSS personnalisé -->
+    <link href="<?= BASE_URL ?>assets/css/style.css" rel="stylesheet">
+    
+    <!-- Meta tags -->
+    <meta name="description" content="Application de gestion de dossiers avec tiers et contacts">
+    <meta name="author" content="Test Technique">
+</head>
+<body>
+    <!-- Navigation -->
+    <?php include __DIR__ . '/navbar.php'; ?>
+    
+    <!-- Messages flash -->
+    <?php if ($successMessage = flash('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <?= e($successMessage) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($errorMessage = flash('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <?= e($errorMessage) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($warningMessage = flash('warning')): ?>
+        <div class="alert alert-warning alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <?= e($warningMessage) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($infoMessage = flash('info')): ?>
+        <div class="alert alert-info alert-dismissible fade show m-3" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            <?= e($infoMessage) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
+    <!-- Contenu principal -->
+    <main class="container-fluid mt-4">
+        <?php
+        // Inclure la vue spécifique
+        $viewFile = __DIR__ . "/../{$view}.php";
+        if (file_exists($viewFile)) {
+            include $viewFile;
+        } else {
+            echo "<div class='alert alert-danger'>";
+            echo "<h4>Vue non trouvée</h4>";
+            echo "<p>Le fichier <code>{$viewFile}</code> n'existe pas.</p>";
+            echo "<p><strong>Vue demandée :</strong> {$view}</p>";
+            echo "<p><strong>Chemin recherché :</strong> {$viewFile}</p>";
+            echo "<p><a href='" . BASE_URL . "' class='btn btn-primary'>Retour à l'accueil</a></p>";
+            echo "</div>";
+        }
+        ?>
+    </main>
+      
+    <!-- Footer -->
+    <?php include __DIR__ . '/footer.php'; ?>
+    
+    <!-- Modales globales -->
+    <div id="global-modals">
+        <!-- Modal de confirmation de suppression -->
+        <div class="modal fade" id="deleteModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                            Confirmer la suppression
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="delete-message">Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Cette action est irréversible.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Annuler
+                        </button>
+                        <button type="button" class="btn btn-danger" id="confirm-delete">
+                            <i class="fas fa-trash me-2"></i>Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal de chargement -->
+        <div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-4">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="mb-0">Traitement en cours...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript personnalisé -->
+    <script src="<?= BASE_URL ?>assets/js/app.js"></script>
+    
+    <!-- Token CSRF pour les requêtes AJAX -->
+    <script>
+        window.csrfToken = '<?= csrf_token() ?>';
+        window.baseUrl = '<?= BASE_URL ?>';
+    </script>
+    
+    <!-- Scripts additionnels de la page -->
+    <?php if (isset($additionalScripts)): ?>
+        <?= $additionalScripts ?>
+    <?php endif; ?>
+</body>
+</html>
