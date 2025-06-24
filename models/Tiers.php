@@ -1,12 +1,8 @@
 <?php
-// models/Tiers.php
 require_once 'Database.php';
 
 class Tiers extends BaseModel {
     
-    /**
-     * Récupérer tous les tiers
-     */
     public function getAll() {
         $sql = "SELECT 
                     t.id,
@@ -25,9 +21,7 @@ class Tiers extends BaseModel {
         return $this->fetchAll($sql);
     }
     
-    /**
-     * Récupérer un tiers par son ID avec ses détails
-     */
+
     public function getById($id) {
         $sql = "SELECT * FROM entites WHERE id = :id AND type = 'tiers' AND actif = TRUE";
         $tiers = $this->fetch($sql, ['id' => $id]);
