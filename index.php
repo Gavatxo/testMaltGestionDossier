@@ -1,32 +1,25 @@
 <?php
-// index.php - Point d'entrée et routeur de l'application
 require_once 'config/config.php';
 
-// Récupérer l'URL demandée
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
-// Enlever le chemin de base si l'application est dans un sous-dossier
 $basePath = '/test-gestion-dossiers/';
 if (strpos($path, $basePath) === 0) {
     $path = substr($path, strlen($basePath));
 }
 
-// Si path est vide après suppression du basePath, on est à la racine
 if (empty($path) || $path === '/') {
     $path = '';
 }
 
-// Séparer le chemin en segments
 $segments = explode('/', trim($path, '/'));
 
-// Premier segment = contrôleur, deuxième = action, troisième = paramètre
 $controller = $segments[0] ?? '';
 $action = $segments[1] ?? '';
 $param = $segments[2] ?? '';
 
 try {
-    // Routes pour les dossiers
     if (empty($controller) || $controller === 'dossier') {
         require_once 'controllers/DossierController.php';
         $dossierController = new DossierController();
@@ -66,7 +59,6 @@ try {
                 break;
                 
             default:
-                // Si l'action est un nombre, c'est probablement un ID pour show
                 if (is_numeric($action)) {
                     $dossierController->show($action);
                 } else {
@@ -76,7 +68,6 @@ try {
         }
     }
     
-    // Routes pour les tiers
     elseif ($controller === 'tiers') {
         require_once 'controllers/TierController.php';
         $tierController = new TierController();
@@ -115,7 +106,6 @@ try {
                 break;
                 
             default:
-                // Si l'action est un nombre, c'est un ID pour show
                 if (is_numeric($action)) {
                     $tierController->show($action);
                 } else {
@@ -125,7 +115,6 @@ try {
         }
     }
     
-    // Routes pour les contacts
     elseif ($controller === 'contact') {
         require_once 'controllers/ContactController.php';
         $contactController = new ContactController();
@@ -164,7 +153,6 @@ try {
                 break;
                 
             default:
-                // Si l'action est un nombre, c'est un ID pour show
                 if (is_numeric($action)) {
                     $contactController->show($action);
                 } else {
@@ -174,7 +162,6 @@ try {
         }
     }
     
-    // Route pour la recherche globale
     elseif ($controller === 'search') {
         require_once 'controllers/SearchController.php';
         $searchController = new SearchController();
@@ -206,14 +193,12 @@ try {
         }
     }
     
-    // Route pour les statistiques/dashboard
     elseif ($controller === 'dashboard') {
         require_once 'controllers/DossierController.php';
         $dossierController = new DossierController();
-        $dossierController->index(); // Afficher le dashboard principal
+        $dossierController->index(); 
     }
     
-    // Route pour les tests (en développement)
     elseif ($controller === 'test' && $action === 'models') {
         include 'test_models.php';
         exit;
@@ -224,26 +209,21 @@ try {
         exit;
     }
     
-    // Route inconnue
     else {
         throw new Exception("Contrôleur non trouvé : {$controller}");
     }
     
 } catch (Exception $e) {
-    // Gestion des erreurs
     if (isAjax()) {
-        // Réponse JSON pour les requêtes AJAX
         jsonResponse([
             'success' => false,
             'message' => $e->getMessage(),
             'error_type' => 'routing_error'
         ], 404);
     } else {
-        // Affichage d'une page d'erreur pour les requêtes normales
         $errorMessage = $e->getMessage();
         $errorCode = 404;
         
-        // En développement, afficher plus de détails
         if (defined('APP_DEBUG') && APP_DEBUG) {
             $errorDetails = [
                 'Controller' => $controller,
