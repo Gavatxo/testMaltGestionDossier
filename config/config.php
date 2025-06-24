@@ -1,7 +1,7 @@
 <?php
 define('APP_NAME', 'Gestion de Dossiers');
 define('APP_VERSION', '1.0.0');
-define('BASE_URL', 'http://localhost:8888/test-gestion-dossiers/');
+define('BASE_URL', 'http://localhost:8888/testMaltGestionDossier/');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
