@@ -1,5 +1,4 @@
 <?php
-// views/layouts/error.php - Page d'erreur
 $title = 'Erreur ' . ($errorCode ?? '500');
 ?>
 <!DOCTYPE html>
