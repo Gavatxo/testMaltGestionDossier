@@ -1,5 +1,4 @@
 <?php
-// test_connection_simple.php - Version simplifiée du test de connexion
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -23,23 +22,19 @@
         <h1>🧪 Test de Connexion Simple</h1>
         
         <?php
-        // Configuration
         echo "<div class='info'><strong>Configuration :</strong><br>";
         echo "PHP Version : " . phpversion() . "<br>";
         echo "Extension PDO : " . (extension_loaded('pdo') ? '✅ OK' : '❌ Manquante') . "<br>";
         echo "Extension PDO MySQL : " . (extension_loaded('pdo_mysql') ? '✅ OK' : '❌ Manquante') . "</div>";
         
         try {
-            // Chargement de la classe Database
             require_once 'config/database.php';
             echo "<div class='success'>✅ Classe Database chargée</div>";
             
-            // Test de connexion
             $database = new Database();
             $conn = $database->getConnection();
             echo "<div class='success'>✅ Connexion réussie !</div>";
             
-            // Informations de base simples
             try {
                 $result = $conn->query("SELECT DATABASE() as db_name")->fetch();
                 echo "<div class='info'>Base de données : " . ($result['db_name'] ?: 'Aucune') . "</div>";
@@ -47,7 +42,6 @@
                 echo "<div class='error'>Erreur info DB : " . $e->getMessage() . "</div>";
             }
             
-            // Test des tables
             try {
                 $stmt = $conn->query("SHOW TABLES");
                 $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -57,7 +51,6 @@
                 } else {
                     echo "<div class='success'>✅ Tables trouvées : " . implode(', ', $tables) . "</div>";
                     
-                    // Compter les données
                     if (in_array('entites', $tables)) {
                         $stmt = $conn->query("SELECT type, COUNT(*) as nb FROM entites GROUP BY type");
                         $counts = $stmt->fetchAll();
