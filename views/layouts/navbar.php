@@ -1,20 +1,16 @@
 <?php
-// views/layouts/navbar.php - Barre de navigation
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
-        <!-- Logo/Brand -->
         <a class="navbar-brand fw-bold" href="<?= BASE_URL ?>">
             <i class="fas fa-folder-open me-2"></i>
             <?= APP_NAME ?>
         </a>
         
-        <!-- Bouton mobile -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        <!-- Menu de navigation -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
@@ -58,7 +54,6 @@
                 </li>
             </ul>
             
-            <!-- Barre de recherche -->
             <div class="d-flex align-items-center">
                 <div class="search-container position-relative me-3">
                     <input type="text" 
@@ -68,14 +63,12 @@
                            style="width: 250px;">
                     <i class="fas fa-search search-icon"></i>
                     
-                    <!-- Résultats de recherche -->
                     <div class="search-results position-absolute w-100 bg-white border rounded shadow-lg" 
                          id="searchResults" 
                          style="top: 100%; z-index: 1050; display: none; max-height: 400px; overflow-y: auto;">
                     </div>
                 </div>
                 
-                <!-- Statistiques rapides -->
                 <div class="navbar-text text-light me-3 d-none d-lg-block">
                     <small>
                         <span class="badge bg-light text-dark me-1" id="stats-dossiers">
@@ -94,8 +87,7 @@
     </div>
 </nav>
 
-<!-- Modales pour création rapide -->
-<!-- Modal création tiers -->
+
 <div class="modal fade" id="createTiersModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -141,7 +133,6 @@
     </div>
 </div>
 
-<!-- Modal création contact -->
 <div class="modal fade" id="createContactModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
