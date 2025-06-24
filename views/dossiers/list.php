@@ -1,9 +1,7 @@
 <?php
-// views/dossiers/list.php - Liste des dossiers
-$view = 'dossiers/list'; // Pour le layout principal
+$view = 'dossiers/list'; 
 ?>
 
-<!-- En-tête de page -->
 <div class="row align-items-center mb-4">
     <div class="col">
         <h1 class="h2 mb-0">
@@ -20,7 +18,6 @@ $view = 'dossiers/list'; // Pour le layout principal
     </div>
 </div>
 
-<!-- Statistiques -->
 <?php if (!empty($stats)): ?>
 <div class="row mb-4">
     <div class="col-md-3">
@@ -94,7 +91,6 @@ $view = 'dossiers/list'; // Pour le layout principal
 </div>
 <?php endif; ?>
 
-<!-- Filtres et recherche -->
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-body">
         <div class="row align-items-end">
@@ -127,7 +123,6 @@ $view = 'dossiers/list'; // Pour le layout principal
     </div>
 </div>
 
-<!-- Liste des dossiers -->
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white border-bottom">
         <div class="d-flex justify-content-between align-items-center">
@@ -151,7 +146,6 @@ $view = 'dossiers/list'; // Pour le layout principal
     
     <div class="card-body" id="dossiers-container">
         <?php if (empty($dossiers)): ?>
-            <!-- État vide -->
             <div class="text-center py-5">
                 <div class="mb-4">
                     <i class="fas fa-folder-open text-muted" style="font-size: 4rem;"></i>
@@ -166,7 +160,6 @@ $view = 'dossiers/list'; // Pour le layout principal
                 </a>
             </div>
         <?php else: ?>
-            <!-- Vue en cartes (par défaut) -->
             <div id="cards-view">
                 <div class="row" id="dossiers-cards">
                     <?php foreach ($dossiers as $dossier): ?>
@@ -253,7 +246,6 @@ $view = 'dossiers/list'; // Pour le layout principal
                 </div>
             </div>
             
-            <!-- Vue en tableau (masquée par défaut) -->
             <div id="table-view" style="display: none;">
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -342,7 +334,6 @@ $view = 'dossiers/list'; // Pour le layout principal
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Basculer entre les vues
     const viewCards = document.getElementById('view-cards');
     const viewTable = document.getElementById('view-table');
     const cardsView = document.getElementById('cards-view');
@@ -362,7 +353,6 @@ document.addEventListener('DOMContentLoaded', function() {
         tableView.style.display = 'block';
     });
     
-    // Recherche en temps réel
     const searchInput = document.getElementById('searchDossiers');
     if (searchInput) {
         searchInput.addEventListener('input', function() {
@@ -370,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Tri
+    
     const sortSelect = document.getElementById('sortBy');
     if (sortSelect) {
         sortSelect.addEventListener('change', function() {
