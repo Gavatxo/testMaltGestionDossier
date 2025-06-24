@@ -1,5 +1,4 @@
 <?php
-// controllers/ContactController.php
 require_once 'config/config.php';
 require_once 'models/Contact.php';
 require_once 'models/Tiers.php';
@@ -14,9 +13,6 @@ class ContactController {
         $this->tiersModel = new Tiers();
     }
     
-    /**
-     * Créer un nouveau contact (AJAX)
-     */
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             jsonResponse(['success' => false, 'message' => 'Méthode non autorisée'], 405);
@@ -33,7 +29,6 @@ class ContactController {
             $prenom = trim($_POST['prenom'] ?? '');
             $email = trim($_POST['email'] ?? '');
             
-            // Validation
             $errors = Contact::validate(['nom' => $nom, 'prenom' => $prenom, 'email' => $email]);
             
             if (!empty($errors)) {
@@ -45,16 +40,13 @@ class ContactController {
                 return;
             }
             
-            // Vérifier l'unicité de l'email
             if ($this->contactModel->emailExists($email)) {
                 jsonResponse(['success' => false, 'message' => 'Cet email est déjà utilisé']);
                 return;
             }
             
-            // Créer le contact
             $contactId = $this->contactModel->create($nom, $prenom, $email);
             
-            // Récupérer le contact créé
             $contact = $this->contactModel->getById($contactId);
             
             jsonResponse([
