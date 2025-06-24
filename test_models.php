@@ -1,5 +1,4 @@
 <?php
-// test_models.php - Test des modèles créés
 require_once 'config/config.php';
 require_once 'config/database.php';
 ?>
@@ -31,7 +30,6 @@ require_once 'config/database.php';
         try {
             echo "<div class='info'>Chargement des modèles...</div>";
             
-            // Test 1 : Chargement des modèles
             require_once 'models/Database.php';
             require_once 'models/Dossier.php';
             require_once 'models/Tiers.php';
@@ -39,7 +37,6 @@ require_once 'config/database.php';
             
             echo "<div class='success'>✅ Tous les modèles sont chargés avec succès</div>";
             
-            // Test 2 : Instanciation des modèles
             $dossierModel = new Dossier();
             $tiersModel = new Tiers();
             $contactModel = new Contact();
@@ -52,7 +49,6 @@ require_once 'config/database.php';
         }
         ?>
         
-        <!-- Test des Dossiers -->
         <div class="test-section">
             <h3>📁 Test du modèle Dossier</h3>
             <?php
@@ -93,7 +89,6 @@ require_once 'config/database.php';
             ?>
         </div>
         
-        <!-- Test des Tiers -->
         <div class="test-section">
             <h3>🏢 Test du modèle Tiers</h3>
             <?php
@@ -116,7 +111,6 @@ require_once 'config/database.php';
                     echo "</table>";
                 }
                 
-                // Test de recherche
                 $recherche = $tiersModel->search('Entreprise');
                 echo "<div class='info'>🔍 Recherche 'Entreprise' : " . count($recherche) . " résultat(s)</div>";
                 
@@ -126,12 +120,10 @@ require_once 'config/database.php';
             ?>
         </div>
         
-        <!-- Test des Contacts -->
         <div class="test-section">
             <h3>👥 Test du modèle Contact</h3>
             <?php
             try {
-                // Récupérer tous les contacts
                 $contacts = $contactModel->getAll();
                 echo "<div class='success'>✅ Récupération de " . count($contacts) . " contact(s)</div>";
                 
@@ -150,11 +142,9 @@ require_once 'config/database.php';
                     echo "</table>";
                 }
                 
-                // Test de recherche
                 $recherche = $contactModel->search('martin');
                 echo "<div class='info'>🔍 Recherche 'martin' : " . count($recherche) . " résultat(s)</div>";
                 
-                // Test de validation
                 $testValidation = Contact::validate([
                     'nom' => 'Test',
                     'prenom' => 'User',
@@ -171,7 +161,6 @@ require_once 'config/database.php';
             ?>
         </div>
         
-        <!-- Test de recherche globale -->
         <div class="test-section">
             <h3>🔍 Test de recherche globale</h3>
             <?php
@@ -198,7 +187,6 @@ require_once 'config/database.php';
             ?>
         </div>
         
-        <!-- Statistiques générales -->
         <div class="test-section">
             <h3>📊 Statistiques</h3>
             <?php
