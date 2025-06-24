@@ -1,5 +1,4 @@
 <?php
-// controllers/TierController.php
 require_once 'config/config.php';
 require_once 'models/Tiers.php';
 require_once 'models/Contact.php';
@@ -14,9 +13,7 @@ class TierController {
         $this->contactModel = new Contact();
     }
     
-    /**
-     * Créer un nouveau tiers (AJAX)
-     */
+    
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             jsonResponse(['success' => false, 'message' => 'Méthode non autorisée'], 405);
