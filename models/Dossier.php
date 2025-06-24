@@ -1,12 +1,8 @@
 <?php
-// models/Dossier.php
 require_once 'Database.php';
 
 class Dossier extends BaseModel {
     
-    /**
-     * Récupérer tous les dossiers avec leurs statistiques
-     */
     public function getAll() {
         $sql = "SELECT 
                     d.id,
@@ -25,11 +21,8 @@ class Dossier extends BaseModel {
         return $this->fetchAll($sql);
     }
     
-    /**
-     * Récupérer un dossier par son ID avec ses détails complets
-     */
+
     public function getById($id) {
-        // Informations de base du dossier
         $sql = "SELECT * FROM entites WHERE id = :id AND type = 'dossier' AND actif = TRUE";
         $dossier = $this->fetch($sql, ['id' => $id]);
         
@@ -37,23 +30,18 @@ class Dossier extends BaseModel {
             return null;
         }
         
-        // Ajouter les tiers et leurs contacts
         $dossier['tiers'] = $this->getTiersByDossierId($id);
         
         return $dossier;
     }
     
-    /**
-     * Récupérer un dossier par sa référence
-     */
+
     public function getByReference($reference) {
         $sql = "SELECT * FROM entites WHERE reference = :reference AND type = 'dossier' AND actif = TRUE";
         return $this->fetch($sql, ['reference' => $reference]);
     }
     
-    /**
-     * Créer un nouveau dossier
-     */
+
     public function create($data = []) {
         try {
             $this->beginTransaction();
