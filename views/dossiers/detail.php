@@ -1,9 +1,7 @@
 <?php
-// views/dossiers/detail.php - Détail d'un dossier
 $view = 'dossiers/detail';
 ?>
 
-<!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -20,7 +18,6 @@ $view = 'dossiers/detail';
     </ol>
 </nav>
 
-<!-- En-tête du dossier -->
 <div class="row align-items-center mb-4">
     <div class="col">
         <div class="d-flex align-items-center">
@@ -64,7 +61,6 @@ $view = 'dossiers/detail';
     </div>
 </div>
 
-<!-- Statistiques du dossier -->
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card border-0 shadow-sm text-center">
@@ -114,7 +110,6 @@ $view = 'dossiers/detail';
     </div>
 </div>
 
-<!-- Liste des tiers et contacts -->
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white">
         <div class="d-flex justify-content-between align-items-center">
@@ -131,7 +126,6 @@ $view = 'dossiers/detail';
     
     <div class="card-body">
         <?php if (empty($dossier['tiers'])): ?>
-            <!-- État vide -->
             <div class="text-center py-5">
                 <div class="mb-4">
                     <i class="fas fa-building text-muted" style="font-size: 3rem;"></i>
@@ -146,7 +140,6 @@ $view = 'dossiers/detail';
                 </button>
             </div>
         <?php else: ?>
-            <!-- Liste des tiers -->
             <div class="accordion" id="tiersAccordion">
                 <?php foreach ($dossier['tiers'] as $index => $tier): ?>
                     <div class="accordion-item border-0 shadow-sm mb-3">
@@ -288,7 +281,6 @@ $view = 'dossiers/detail';
     </div>
 </div>
 
-<!-- Modal d'ajout de tiers -->
 <div class="modal fade" id="addTiersModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -348,7 +340,6 @@ $view = 'dossiers/detail';
     </div>
 </div>
 
-<!-- Modal d'ajout de contact -->
 <div class="modal fade" id="addContactModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -369,7 +360,6 @@ $view = 'dossiers/detail';
                         </h6>
                         <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
                             <div id="available-contacts-list">
-                                <!-- Chargé via AJAX -->
                             </div>
                         </div>
                     </div>
