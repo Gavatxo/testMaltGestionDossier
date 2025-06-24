@@ -1,19 +1,13 @@
 <?php
-// config/config.php
-// Configuration générale de l'application
-
 define('APP_NAME', 'Gestion de Dossiers');
 define('APP_VERSION', '1.0.0');
 define('BASE_URL', 'http://localhost:8888/test-gestion-dossiers/');
 
-// Configuration des erreurs
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Timezone
 date_default_timezone_set('Europe/Paris');
 
-// Autoloader simple pour charger automatiquement les classes
 spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/../models/',
@@ -30,7 +24,6 @@ spl_autoload_register(function ($class) {
     }
 });
 
-// Démarrer la session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -39,13 +32,12 @@ if (session_status() === PHP_SESSION_NONE) {
  * Fonctions utilitaires globales
  */
 
-// Redirection
+
 function redirect($url) {
     header("Location: " . BASE_URL . $url);
     exit;
 }
 
-// Messages flash
 function flash($key, $message = null) {
     if ($message === null) {
         $message = $_SESSION['flash'][$key] ?? null;
@@ -55,19 +47,16 @@ function flash($key, $message = null) {
     $_SESSION['flash'][$key] = $message;
 }
 
-// Conserver les anciennes valeurs de formulaire
 function old($key, $default = '') {
     $value = $_SESSION['old'][$key] ?? $default;
     unset($_SESSION['old'][$key]);
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
-// Sauvegarder les valeurs de formulaire pour réaffichage
 function flashInputs($data) {
     $_SESSION['old'] = $data;
 }
 
-// Protection CSRF
 function csrf_token() {
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -79,18 +68,15 @@ function verify_csrf($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
-// Échapper les données pour l'affichage
 function e($string) {
     return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-// Formater une date
 function formatDate($date, $format = 'd/m/Y H:i') {
     if (!$date) return '';
     return date($format, strtotime($date));
 }
 
-// Formater une date courte
 function formatDateShort($date) {
     return formatDate($date, 'd/m/Y');
 }
