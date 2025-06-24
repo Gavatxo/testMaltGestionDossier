@@ -1,5 +1,3 @@
-// assets/js/app.js - JavaScript principal de l'application
-
 /**
  * Configuration globale
  */
