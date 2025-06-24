@@ -1,21 +1,17 @@
 <?php
-// models/Database.php
-
 if (!class_exists('Database')) {
     require_once __DIR__ . '/../config/database.php';
 }
 abstract class BaseModel {
     protected $db;
-    protected $table = 'entites'; // Table principale
+    protected $table = 'entites'; 
     
     public function __construct() {
         $database = new Database();
         $this->db = $database->getConnection();
     }
     
-    /**
-     * Exécuter une requête préparée
-     */
+
     protected function query($sql, $params = []) {
         try {
             $stmt = $this->db->prepare($sql);
@@ -26,25 +22,19 @@ abstract class BaseModel {
         }
     }
     
-    /**
-     * Récupérer tous les résultats
-     */
+
     protected function fetchAll($sql, $params = []) {
         $stmt = $this->query($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    /**
-     * Récupérer un seul résultat
-     */
+ 
     protected function fetch($sql, $params = []) {
         $stmt = $this->query($sql, $params);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-    /**
-     * Insérer un enregistrement
-     */
+  
     protected function insert($data) {
         $columns = implode(', ', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
@@ -55,9 +45,7 @@ abstract class BaseModel {
         return $this->db->lastInsertId();
     }
     
-    /**
-     * Mettre à jour un enregistrement
-     */
+
     protected function update($id, $data) {
         $setParts = [];
         foreach (array_keys($data) as $column) {
