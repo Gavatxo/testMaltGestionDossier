@@ -1,5 +1,4 @@
 <?php
-// controllers/DossierController.php
 require_once 'config/config.php';
 require_once 'models/Dossier.php';
 require_once 'models/Tiers.php';
